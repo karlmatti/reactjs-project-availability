@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import dateFormat from 'dateformat';
 import Project from "./Project";
+import {Grid} from "@material-ui/core";
 
 
 /*
@@ -36,10 +37,10 @@ export default function Availability() {
 
     return (
 
-        <div>
+        <Grid container spacing={3}>
             <Project dataset={generate_series(1)}/>
-            <br/>
+
             <Project dataset={generate_series(1)}/>
-        </div>
+        </Grid>
     );
 }

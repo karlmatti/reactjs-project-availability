@@ -8,7 +8,7 @@ const availableVLine = {
     color: "solid green",
     border: "1px solid green",
     height: "20px",
-    padding: "2px",
+    padding: "1px",
     margin: "1px"
 
 }
@@ -17,7 +17,7 @@ const partiallyUnavailableVLine = {
     color: "solid green",
     border: "1px solid orange",
     height: "20px",
-    padding: "2px",
+    padding: "1px",
     margin: "1px"
 }
 const unavailableVLine = {
@@ -25,8 +25,13 @@ const unavailableVLine = {
     color: "solid red",
     border: "1px solid orange",
     height: "20px",
-    padding: "2px",
+    padding: "1px",
     margin: "1px"
+}
+
+const headerStyle = {
+    color: "#66727F",
+    fontWeight: "bold"
 }
 
 export default function Project (props) {
@@ -90,15 +95,22 @@ export default function Project (props) {
     }
 
     return (
-        <div>
-        <h3>Project</h3>
-        <Grid container spacing={1} justify="center"
+        <Grid container justify="center"
               alignItems="center">
-
-                <StatusList status={statusBars}/>
+            <Grid container justify="left"
+                  alignItems="center">
+                <Grid item>
+                    <p style={headerStyle}>Project</p>
+                </Grid>
+            </Grid>
+            <Grid container justify="center"
+                  alignItems="center">
+                <Grid item>
+                    <StatusList status={statusBars}/>
+                </Grid>
+            </Grid>
 
         </Grid>
-        </div>
 
     );
 }
