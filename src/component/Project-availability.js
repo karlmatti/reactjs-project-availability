@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import dateFormat from 'dateformat';
+import Project from "./Project";
 
 
 /*
@@ -19,7 +20,7 @@ function generate_series(step) {
     while (dt.getDate() === 14) {
         let t = dateFormat(dt, "HH:MM:ss'Z' / ddmmmyy").toUpperCase();
         let availability = true;
-        if (Math.floor(Math.random() * 10) > 7) {
+        if (Math.floor(Math.random() * 10) > 2) { // Change the chance of generating false values here
             availability = false;
         }
         let obj = {availability: availability, timestamp: t};
@@ -31,12 +32,14 @@ function generate_series(step) {
 }
 
 export default function Availability() {
-    const [data, setData] = useState(generate_series(1));
+    //const [data, setData] = useState(generate_series(1));
 
     return (
 
         <div>
-
+            <Project dataset={generate_series(1)}/>
+            <br/>
+            <Project dataset={generate_series(1)}/>
         </div>
     );
 }
