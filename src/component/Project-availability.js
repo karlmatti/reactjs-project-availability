@@ -20,7 +20,7 @@ function generate_series(step) {
     while (dt.getDate() === 14) {
         let t = dateFormat(dt, "HH:MM:ss'Z' / ddmmmyy").toUpperCase();
         let availability = true;
-        if (Math.floor(Math.random() * 10) > 2) { // Change the chance of generating false values here
+        if (Math.floor(Math.random() * 10) > 7) { // Change the chance of generating false values here
             availability = false;
         }
         let obj = {availability: availability, timestamp: t};
