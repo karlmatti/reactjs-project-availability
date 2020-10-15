@@ -4,6 +4,7 @@ import Project from "./Project";
 import {Grid} from "@material-ui/core";
 
 
+
 /*
 Generating 24h dataset with 1 minute precision.
 Example:
@@ -37,10 +38,10 @@ export default function Availability() {
 
     return (
 
-        <Grid container spacing={3}>
-            <Project dataset={generate_series(1)}/>
+        <Grid container>
+            <Project dataset={generate_series(1)} name={"Project A"}/>
 
-            <Project dataset={generate_series(1)}/>
+            <Project dataset={generate_series(1)} name={"Project B"}/>
         </Grid>
     );
 }
