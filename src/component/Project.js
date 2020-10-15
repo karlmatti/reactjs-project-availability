@@ -1,5 +1,17 @@
 import React, {useState} from 'react';
-import {Grid} from '@material-ui/core';
+import {Grid, Tooltip, Typography} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import WarningIcon from '@material-ui/icons/Warning';
+
+const HtmlTooltip = withStyles((theme) => ({
+    tooltip: {
+        backgroundColor: '#f5f5f9',
+        color: 'rgba(0, 0, 0, 0.87)',
+        maxWidth: 220,
+        fontSize: theme.typography.pxToRem(12),
+        border: '1px solid #dadde9',
+    },
+}))(Tooltip);
 
 const projectStyle = {
     paddingBottom: "5%"
@@ -53,6 +65,15 @@ function capitalizeFirstLetter(string) {
 export default function Project (props) {
     let [statusBars, setStatusBars] = useState(generateStatusBars())
     let [availability, setAvailability] = useState(getAvailability())
+    let [availabilityAmount, setAvailabilityAmount] = useState(getAvailabilityAmount())
+
+    function getAvailabilityAmount(){
+        let downTimeCounter = 0;
+        statusBars.forEach(function(item){
+            downTimeCounter += item.downTime;
+        })
+        return (downTimeCounter * 100 / 1440).toFixed(2); // Hardcoded 1440 which is minutes in 24h
+    }
 
     // Returns true or false
     function getAvailability() {
@@ -104,15 +125,47 @@ export default function Project (props) {
         return tempStatusBars;
     }
 
-
     function StatusList(props){
         const listItems = props.status.map((status) => {
             if (status.availability === "available") {
-                return(<button key={status.timestamp} style={availableVLine}/>)
+                return(<HtmlTooltip
+                    title={
+                        <React.Fragment>
+                            <Typography color="inherit">{status.timestamp}</Typography>
+                        </React.Fragment>
+                    }
+                >
+                        <button key={status.timestamp} style={availableVLine}/>
+                </HtmlTooltip>
+                    )
             } else if (status.availability === "partially-unavailable") {
-                return(<button key={status.timestamp} style={partiallyUnavailableVLine}/>)
+                return(
+                    <HtmlTooltip
+                        title={
+                            <React.Fragment>
+                                <Typography color="inherit">{status.timestamp}</Typography>
+                                <WarningIcon fontSize="small" style={{ color: "#f6c631" }}/>
+                                <em>{" Partial outage"}</em> <b>{status.downTime + ' min'} </b>
+                            </React.Fragment>
+                        }
+                    >
+                        <button key={status.timestamp} style={partiallyUnavailableVLine}/>
+                    </HtmlTooltip>)
             } else if (status.availability === "unavailable") {
-                return(<button key={status.timestamp} style={unavailableVLine}/>)
+                return(
+                    <HtmlTooltip
+                        title={
+                            <React.Fragment>
+                                <Typography color="inherit">{status.timestamp}</Typography>
+                                <WarningIcon fontSize="small" style={{ color: "#f6c631" }}/>
+                                <em>{" Outage"}</em> <b>{status.downTime + ' min'} </b>
+                            </React.Fragment>
+                        }
+                    >
+                        <button key={status.timestamp} style={unavailableVLine}/>
+                    </HtmlTooltip>
+
+                    )
             }
         });
         return (
@@ -147,6 +200,14 @@ export default function Project (props) {
                 <Grid item xs={1}/>
                 <Grid item xs={10}>
                     <StatusList status={statusBars}/>
+                </Grid>
+                <Grid item xs={1}/>
+            </Grid>
+            <Grid container justify="left"
+                  alignItems="center">
+                <Grid item xs={1}/>
+                <Grid item xs={10}>
+                    {availabilityAmount} % availability
                 </Grid>
                 <Grid item xs={1}/>
             </Grid>
