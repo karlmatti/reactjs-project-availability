@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {Grid, Tooltip, Typography} from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import {withStyles} from '@material-ui/core/styles';
 import WarningIcon from '@material-ui/icons/Warning';
+import styles from './project.module.css';
 
 const HtmlTooltip = withStyles((theme) => ({
     tooltip: {
@@ -13,66 +14,28 @@ const HtmlTooltip = withStyles((theme) => ({
     },
 }))(Tooltip);
 
-const projectStyle = {
-    paddingBottom: "5%"
-}
-
-const availableVLine = {
-
-    backgroundColor: "#4CAF50",
-    color: "solid green",
-    border: "1px solid green",
-    height: "30px",
-    padding: "2px",
-    margin: "2px"
-
-}
-const partiallyUnavailableVLine = {
-    backgroundColor: "#fcbb19",
-    color: "solid green",
-    border: "1px solid orange",
-    height: "30px",
-    padding: "2px",
-    margin: "2px"
-}
-const unavailableVLine = {
-    backgroundColor: "#f12c2c",
-    color: "solid red",
-    border: "1px solid orange",
-    height: "25px",
-    padding: "1px",
-    margin: "1px"
-}
 
 const availableStatus = {
     color: "#4CAF50"
+
 }
 
 const unavailableStatus = {
     color: "#f12c2c"
 }
 
-const headerStyle = {
-    color: "#66727F",
-    fontWeight: "bold"
-}
 
-
-
-function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-export default function Project (props) {
+export default function Project(props) {
     let [statusBars, setStatusBars] = useState(generateStatusBars())
     let [availability, setAvailability] = useState(getAvailability())
     let [availabilityAmount, setAvailabilityAmount] = useState(getAvailabilityAmount())
 
-    function getAvailabilityAmount(){
+    function getAvailabilityAmount() {
         let downTimeCounter = 0;
-        statusBars.forEach(function(item){
+        statusBars.forEach(function (item) {
             downTimeCounter += item.downTime;
         })
-        return (downTimeCounter * 100 / 1440).toFixed(2); // Hardcoded 1440 which is minutes in 24h
+        return (100 - (downTimeCounter * 100 / 1440)).toFixed(2); // Hardcoded 1440 which is minutes in 24h
     }
 
     // Returns true or false
@@ -88,14 +51,14 @@ export default function Project (props) {
     ...
     ]
      */
-    function generateStatusBars(){
+    function generateStatusBars() {
         let counter = 14;
         let statusBar = {availability: "available", downTime: 0}
         let tempStatusBars = [];
         props.dataset.forEach(function (item, index) {
             if (counter !== 0) {
 
-                if(!item.availability){
+                if (!item.availability) {
                     statusBar.availability = "partially-unavailable";
                     statusBar.downTime += 1
 
@@ -125,94 +88,111 @@ export default function Project (props) {
         return tempStatusBars;
     }
 
-    function StatusList(props){
-        const listItems = props.status.map((status) => {
+    function StatusList(props) {
+        const listItems = props.status.map((status, index) => {
+
             if (status.availability === "available") {
-                return(<HtmlTooltip
-                    title={
-                        <React.Fragment>
-                            <Typography color="inherit">{status.timestamp}</Typography>
-                        </React.Fragment>
-                    }
-                >
-                        <button key={status.timestamp} style={availableVLine}/>
-                </HtmlTooltip>
-                    )
-            } else if (status.availability === "partially-unavailable") {
-                return(
-                    <HtmlTooltip
-                        title={
-                            <React.Fragment>
-                                <Typography color="inherit">{status.timestamp}</Typography>
-                                <WarningIcon fontSize="small" style={{ color: "#f6c631" }}/>
-                                <em>{" Partial outage"}</em> <b>{status.downTime + ' min'} </b>
-                            </React.Fragment>
-                        }
+                return (<HtmlTooltip key={index}
+                                     title={
+                                         <React.Fragment key={index}>
+                                             <Typography key={index} color="inherit">{status.timestamp}</Typography>
+                                         </React.Fragment>
+                                     }
                     >
-                        <button key={status.timestamp} style={partiallyUnavailableVLine}/>
+                        <button key={index} className={styles.availableVLine}/>
+                    </HtmlTooltip>
+                )
+            } else if (status.availability === "partially-unavailable") {
+                return (
+                    <HtmlTooltip key={index}
+                                 title={
+                                     <React.Fragment key={index}>
+                                         <Typography key={index} color="inherit">{status.timestamp}</Typography>
+                                         <div style={{
+                                             display: 'flex',
+                                             alignItems: 'center'
+                                         }}>
+                                             <WarningIcon key={index} fontSize="small" style={{color: "#f6c631"}}/>
+                                             <em key={index}>&nbsp;Partial outage:&nbsp;</em> <b
+                                             key={index}> {status.downTime + ' min'} </b>
+                                         </div>
+                                     </React.Fragment>
+                                 }
+                    >
+                        <button key={index} className={styles.partiallyUnavailableVLine}/>
                     </HtmlTooltip>)
             } else if (status.availability === "unavailable") {
-                return(
-                    <HtmlTooltip
-                        title={
-                            <React.Fragment>
-                                <Typography color="inherit">{status.timestamp}</Typography>
-                                <WarningIcon fontSize="small" style={{ color: "#f6c631" }}/>
-                                <em>{" Outage"}</em> <b>{status.downTime + ' min'} </b>
-                            </React.Fragment>
-                        }
+                return (
+                    <HtmlTooltip key={index}
+                                 title={
+                                     <React.Fragment key={index}>
+                                         <Typography key={index} color="inherit">{status.timestamp}</Typography>
+                                         <div style={{
+                                             display: 'flex',
+                                             alignItems: 'center'
+                                         }}>
+                                             <WarningIcon key={index} fontSize="small" style={{color: "#f6c631"}}/>
+                                             <em key={index}>&nbsp;Outage:&nbsp;</em> <b
+                                             key={index}> {status.downTime + ' min'} </b>
+                                         </div>
+                                     </React.Fragment>
+                                 }
                     >
-                        <button key={status.timestamp} style={unavailableVLine}/>
+                        <button key={index} className={styles.unavailableVLine}/>
                     </HtmlTooltip>
 
-                    )
+                )
             }
         });
         return (
-            <Grid>
+            <div className={styles.statusBars}>
                 {listItems}
-            </Grid>
+            </div>
         );
     }
 
     return (
-        <Grid container justify="center"
-              alignItems="center"
-                style={projectStyle}>
-            <Grid container justify="left"
-                  alignItems="center">
-                <Grid item xs={1}/>
-                <Grid item xs={2}>
-                    <p style={headerStyle}>{props.name}</p>
+        <div className={styles.project}>
+            <div style={{margin: "25px"}}>
+                <Grid container justify="space-between">
+
+                    <Grid item xs={2}>
+                        <p className={styles.projectName}>{props.name}</p>
+                    </Grid>
+
+                    <Grid item xs={2} style={{textAlign: "right",}}>
+                        <p style={availability ? availableStatus : unavailableStatus}>
+                            {availability ? "Available" : "Unavailable"}
+                        </p>
+                    </Grid>
                 </Grid>
-                <Grid item xs={6}/>
-                <Grid item xs={2}>
-                    <p style={availability ? availableStatus : unavailableStatus}>
-                        {availability ? "Available" : "Unavailable"}
-                    </p>
+                <Grid container>
+                    <Grid item xs={12}>
+                        <StatusList status={statusBars}/>
+                    </Grid>
                 </Grid>
-                <Grid item xs={1}/>
+                <Grid container>
+                    <Grid item xs={1}>
+                        <p className={styles.informativeText}>24 hours ago</p>
+                    </Grid>
 
 
-            </Grid>
-            <Grid container justify="left"
-                  alignItems="center">
-                <Grid item xs={1}/>
-                <Grid item xs={10}>
-                    <StatusList status={statusBars}/>
-                </Grid>
-                <Grid item xs={1}/>
-            </Grid>
-            <Grid container justify="left"
-                  alignItems="center">
-                <Grid item xs={1}/>
-                <Grid item xs={10}>
-                    {availabilityAmount} % availability
-                </Grid>
-                <Grid item xs={1}/>
-            </Grid>
+                    <Grid item xs={10}>
+                        <p className={styles.hrSect}>
 
-        </Grid>
+                            {availabilityAmount} % availability
 
+
+                        </p>
+
+
+                    </Grid>
+
+                    <Grid item xs={1} style={{textAlign: "right"}}>
+                        <p className={styles.informativeText}>Today</p>
+                    </Grid>
+                </Grid>
+            </div>
+        </div>
     );
 }
