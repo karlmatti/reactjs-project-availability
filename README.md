@@ -1,3 +1,19 @@
+# How to run
+### 1. yarn install
+### 2. yarn start
+### 3. Open [http://localhost:3000](http://localhost:3000)
+
+
+
+| 1920x1080     | 1366x768      |  
+|------------|-------------|
+| ![Screenshot](screenshots/1920x1080.png) | ![Screenshot](screenshots/1366x768.png)|
+
+
+
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
